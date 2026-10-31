@@ -10,7 +10,7 @@ variable "tags" {
   default     = {}
 }
 
-variable "default_permission_boundary_arn" {
+variable "default_permissions_boundary_arn" {
   description = "Boundary applied to every role/user that does not set its own."
   type        = string
   default     = null
