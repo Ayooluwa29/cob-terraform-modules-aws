@@ -1,6 +1,6 @@
 output "policy_arns" {
   description = "Managed policy ARNs, keyed by the key used in var.policies."
-  value       = { for k, v in var.var.policies : k => aws_iam_policy.this["policy/${k}"].arn }
+  value       = { for k, v in var.policies : k => aws_iam_policy.this["policy/${k}"].arn }
 }
 
 output "permission_boundary_arns" {

@@ -102,7 +102,7 @@ locals {
     },
   )
 
-  role_attach_by_key  = merge([for k, r in local.roles_all : { for pk in r.policy_keys : "${k}|${p}" => { principal = k, policy_key = pk } }]...)
+  role_attach_by_key  = merge([for k, r in local.roles_all : { for pk in r.policy_keys : "${k}|${pk}" => { principal = k, policy_key = pk } }]...)
   role_attach_by_arn  = merge([for k, r in local.roles_all : { for a in r.policy_arns : "${k}|${a}" => { principal = k, arn = a } }]...)
   group_attach_by_key = merge([for k, g in var.groups : { for pk in g.policy_keys : "${k}|${pk}" => { principal = k, policy_key = pk } }]...)
   group_attach_by_arn = merge([for k, g in var.groups : { for a in g.policy_arns : "${k}|${a}" => { principal = k, arn = a } }]...)
@@ -260,7 +260,7 @@ resource "aws_iam_role_policy_attachment" "by_arn" {
 
 
 resource "aws_iam_instance_profile" "this" {
-  for_each = { for k, r in local.local.roles_all : k => r if r.instance_profile }
+  for_each = { for k, r in local.roles_all : k => r if r.instance_profile }
 
   name = aws_iam_role.this[each.key].name
   role = aws_iam_role.this[each.key].name
