@@ -163,8 +163,8 @@ variable "cicd_roles" {
     trusted_services        = optional(list(string), [])
     policy_keys             = optional(list(string), [])
     policy_arns             = optional(list(string), [])
-    permission_boundary_key = optional(string)
-    permission_boundary_arn = optional(string)
+    permissions_boundary_key = optional(string)
+    permissions_boundary_arn = optional(string)
     tags                    = optional(map(string), {})
   }))
   default = {}
