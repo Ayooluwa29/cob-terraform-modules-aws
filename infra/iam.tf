@@ -171,6 +171,7 @@ module "iam" {
       oidc_provider_arn = var.create_oidc_provider ? null : local.oidc_provider_arn
       subjects          = ["repo:${var.github_org}/${var.github_repo}:ref:refs/heads/${var.allowed_branch}"]
       policy_keys       = ["pipeline"]
+      subjects = ["${var.github_sub_prefix}:ref:refs/heads/${var.allowed_branch}"]
       # No boundary on the pipeline role itself: the guardrails live in its policy
       # (boundary-conditioned IAM writes + explicit denies) and in the boundary it forces on everything it creates.
     }
@@ -183,6 +184,7 @@ module "iam" {
       subjects          = ["repo:${var.github_org}/${var.github_repo}:pull_request"]
       policy_keys       = ["plan-state"]
       policy_arns       = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
+      subjects = ["${var.github_sub_prefix}:pull_request"]
     }
   }
 }

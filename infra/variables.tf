@@ -42,3 +42,8 @@ variable "tags" {
   type    = map(string)
   default = { Project = "COB", ManagedBy = "terraform", Stack = "bootstrap" }
 }
+
+variable "github_sub_prefix" {
+  description = "Subject prefix GitHub puts in OIDC tokens for the pipeline repo (from the repo's OIDC customization API: sub_claim_prefix)."
+  type        = string
+}
