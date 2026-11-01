@@ -248,7 +248,7 @@ resource "aws_iam_role_policy_attachment" "by_key" {
   for_each = local.role_attach_by_key
 
   role       = aws_iam_role.this[each.value.principal].name
-  policy_arn = each.value.arn
+  policy_arn = local.policy_arns["policy/${each.value.policy_key}"]
 }
 
 resource "aws_iam_role_policy_attachment" "by_arn" {
