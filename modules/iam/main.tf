@@ -1,6 +1,6 @@
 locals {
   policy_defs = merge(
-    { for k, v in var.var.policies : "policy/${k}" => v },
+    { for k, v in var.policies : "policy/${k}" => v },
     { for k, v in var.permission_boundaries : "boundary/${k}" => v }
   )
 
@@ -8,9 +8,9 @@ locals {
 
   #   OIDC info per CI/CD role
   oidc_info = {
-    for k, r in var.var.cicd_roles : k => {
+    for k, r in var.cicd_roles : k => {
       arn  = r.oidc_provider_key != null ? aws_iam_openid_connect_provider.this[r.oidc_provider_key].arn : r.oidc_provider_arn
-      host = r.oidc_provider_key != null ? replace(var.var.oidc_providers[r.oidc_provider_key].url, "https://", "") : regex("oidc-provider/(.+)$", r.oidc_provider_arn)[0]
+      host = r.oidc_provider_key != null ? replace(var.oidc_providers[r.oidc_provider_key].url, "https://", "") : regex("oidc-provider/(.+)$", r.oidc_provider_arn)[0]
     } if r.oidc_provider_key != null || r.oidc_provider_arn != null
   }
 
@@ -67,7 +67,7 @@ locals {
 
   roles_all = merge(
     {
-      for k, r in var.var.roles : k => {
+      for k, r in var.roles : k => {
         description          = r.description
         path                 = r.path
         max_session_duration = r.max_session_duration
