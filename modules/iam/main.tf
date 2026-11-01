@@ -71,10 +71,10 @@ locals {
         description          = r.description
         path                 = r.path
         max_session_duration = r.max_session_duration
-        trust                = local.cicd_trust[k]
+        trust                = local.role_trust[k]
         policy_keys          = r.policy_keys
         policy_arns          = r.policy_arns
-        instance_profile     = false
+        instance_profile     = r.create_instance_profile
         tags                 = r.tags
         boundary = (
           r.permissions_boundary_arn != null ? r.permissions_boundary_arn :
@@ -187,8 +187,8 @@ resource "aws_iam_user" "this" {
   path          = each.value.path
   force_destroy = each.value.force_destroy
   permissions_boundary = (
-    each.value.permission_boundary_arn != null ? each.value.permissions_boundary_arn :
-    each.value.permission_boundary_key != null ? local.policy_arns["boundary/${each.value.permissions_boundary_key}"] :
+    each.value.permissions_boundary_arn != null ? each.value.permissions_boundary_arn :
+    each.value.permissions_boundary_key != null ? local.policy_arns["boundary/${each.value.permissions_boundary_key}"] :
     var.default_permissions_boundary_arn
   )
   tags = merge(var.tags, each.value.tags)
@@ -197,7 +197,7 @@ resource "aws_iam_user" "this" {
 resource "aws_iam_user_group_membership" "this" {
   for_each = { for k, u in var.users : k => u if length(u.groups) > 0 }
 
-  user   = aws_iam_user.this[each.value.principal].name
+  user   = aws_iam_user.this[each.key].name
   groups = [for g in each.value.groups : aws_iam_group.this[g].name]
 }
 
